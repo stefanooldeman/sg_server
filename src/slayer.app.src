@@ -1,0 +1,12 @@
+{application, slayer,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { slayer_app, []}},
+  {env, []}
+ ]}.
