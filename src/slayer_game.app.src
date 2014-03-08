@@ -1,12 +1,14 @@
 {application, slayer_game,
  [
   {description, ""},
-  {vsn, "1"},
-  {registered, []},
-  {applications, [
-                  kernel,
-                  stdlib
-                 ]},
+  {vsn, "0.1.0"},
+  {modules, [slayer_game,
+             sg_sup,
+             sg_world,
+             sg_player,
+             sg_player_sup]},
+  {registered, [sg_sup, sg_player_sup]},
+  {applications, [kernel, stdlib]},
   {mod, { sg_app, []}},
   {env, []}
  ]}.

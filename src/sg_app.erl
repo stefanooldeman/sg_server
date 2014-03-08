@@ -10,7 +10,7 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    sg_world_sup:start_link().
+    sg_sup:start_link().
 
 stop(_State) ->
     ok.

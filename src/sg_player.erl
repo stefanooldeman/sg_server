@@ -1,11 +1,11 @@
 %% @author Stefano Oldeman <stefano.oldeman@gmail.com>
 %% @copyright 2013-2014.
 
--module(sg_world).
+-module(sg_player).
 
 -behaviour(gen_server).
 
--export([start_link/0, add_player/2, get_players_list/0]).
+-export([start_link/1, create/1]).
 
 %% gen_server callbacks
 -export([init/1,
@@ -17,44 +17,28 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {
-        players :: [{string(), pid()}]
-}).
+start_link(Name) ->
+    %% Note: Name is omitted, the gen_server is not registered.
+    %% (where usually Name={local, ?SERVER})
+    %% Instead its pid must be used!!!
+    gen_server:start_link(?SERVER, [Name], []).
 
-start_link() ->
-    gen_server:start_link({local, ?SERVER}, ?SERVER, [], []).
-
-init([]) ->
-    State=#state{
-        players=[]
-        %,monsters=[]
-        %,scores=[]
-    },
+init([Name]) ->
+    State={},
+    lager:log(info, [], "~s created~n", [Name]),
     {ok, State}.
+
 
 %%--------------------------------------------------------------------
 %%  %% API (delegated to sync | async calls)
 %%--------------------------------------------------------------------
-add_player(Name, Pid) ->
-    Nr=gen_server:call(?SERVER, {add_player, {Name, Pid}}),
-    {ok, Nr}.
 
-get_players_list() ->
-    gen_server:call(?SERVER, list_players).
-
+create(Name) ->
+    sg_player_sup:start_child(Name).
 
 %%--------------------------------------------------------------------
 %%  %% Callback functions for gen_server
 %%--------------------------------------------------------------------
-%%
-handle_call({add_player, Val}, _From, State) ->
-    NewList=[Val|State#state.players],
-    {reply, length(NewList), State#state{players=NewList}};
-
-handle_call(list_players, _From, State) ->
-    Names=proplists:get_keys(State#state.players),
-    {reply, Names, State};
-
 handle_call(_Request, _From, State) ->
     {reply, ignored, State}.
 
