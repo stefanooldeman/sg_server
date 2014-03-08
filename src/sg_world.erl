@@ -1,11 +1,11 @@
-%% @author Stefano Oldeman <stefano.oldeman@spilgames.com>
-%% @copyright 2013 SpilGames.
+%% @author Stefano Oldeman <stefano.oldeman@gmail.com>
+%% @copyright 2012-2013.
 
--module(slayer).
+-module(sg_world).
 
 -behaviour(gen_server).
 
--export([start_link/0, join/1]).
+-export([start_link/0, add_player/1]).
 
 %% gen_server callbacks
 -export([init/1,
@@ -15,14 +15,14 @@
          terminate/2,
          code_change/3]).
 
--type proplist() :: [{atom(), term()}].
+-define(SERVER, ?MODULE).
 
 -record(state, {
         players :: [string()]
 }).
 
 start_link() ->
-    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+    gen_server:start_link({local, ?SERVER}, ?SERVER, [], []).
 
 init([]) ->
     State=#state{
@@ -35,22 +35,18 @@ init([]) ->
 %%--------------------------------------------------------------------
 %%  %% API (delegated to sync | async calls)
 %%--------------------------------------------------------------------
-
--spec join(atom()) -> {ok, proplist()}.
-join(PlayerName) ->
-    lager:log(info, [], "[~s] joined the game~n", [PlayerName]),
-    Stats=gen_server:call(?MODULE, {player_add, PlayerName}),
-    {ok, Stats}.
+add_player(Name) ->
+    Nr=gen_server:call(?SERVER, {add_player, Name}),
+    {ok, Nr}.
 
 
 %%--------------------------------------------------------------------
 %%  %% Callback functions for gen_server
 %%--------------------------------------------------------------------
 %%
-handle_call({player_add, Name}, _From, #state{players=Players}=State) ->
-    Stats=[{players_online, 1+length(Players)}],
+handle_call({add_player, Name}, _From, #state{players=Players}=State) ->
     NewList=[Name|Players],
-    {reply, Stats, State#state{players=NewList}};
+    {reply, length(NewList), State#state{players=NewList}};
 
 handle_call(_Request, _From, State) ->
     {reply, ignored, State}.

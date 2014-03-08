@@ -1,4 +1,4 @@
-{application, slayer,
+{application, slayer_game,
  [
   {description, ""},
   {vsn, "1"},
@@ -7,6 +7,6 @@
                   kernel,
                   stdlib
                  ]},
-  {mod, { slayer_app, []}},
+  {mod, { sg_app, []}},
   {env, []}
  ]}.

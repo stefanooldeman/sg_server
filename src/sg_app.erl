@@ -1,4 +1,4 @@
--module(slayer_app).
+-module(sg_app).
 
 -behaviour(application).
 
@@ -10,7 +10,7 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    slayer_sup:start_link().
+    sg_world_sup:start_link().
 
 stop(_State) ->
     ok.

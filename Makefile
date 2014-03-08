@@ -27,7 +27,7 @@ test: compile
 	rebar skip_deps=true eunit
 
 run: compile
-	erl -sname slayer_server -config app -pa ./deps/lager/ebin -pa ./ebin -eval "application:start(slayer), lager:start()."
+	erl -sname slayer_server -config app -pa ./deps/lager/ebin -pa ./ebin -eval "application:start(slayer_game), lager:start()."
 
 # Generates the edoc documentation and places it under doc/ .
 docs:

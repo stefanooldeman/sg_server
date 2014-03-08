@@ -1,0 +1,1 @@
+-type proplist() :: [{atom(), term()}].
