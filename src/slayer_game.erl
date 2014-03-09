@@ -1,7 +1,7 @@
 
 -module(slayer_game).
 
--export([join/1, list/0]).
+-export([join/1, list/0, attack/2, test/0]).
 
 
 join(PlayerName) ->
@@ -11,3 +11,9 @@ join(PlayerName) ->
 
 list() ->
     sg_world:get_players_list().
+
+attack(Player1, Player2) ->
+    sg_world:attack_player(Player1, Player2).
+
+test() ->
+    join(a), join(b), attack(a, b), attack(a, b).

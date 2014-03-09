@@ -8,8 +8,6 @@
 %% Supervisor callbacks
 -export([init/1]).
 
-%% Helper macro for declaring children of supervisor
--define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
 -define(SERVER, ?MODULE).
 
 %% ===================================================================
@@ -27,9 +25,10 @@ start_child(Name) ->
 %% ===================================================================
 
 init([]) ->
-    Childs = [
-        ?CHILD(sg_player, worker)
-    ],
-    % All child processes are dynamically added instances of the same process.
-    {ok, { {simple_one_for_one, 0, 1}, Childs} }.
+    PlayerProces = {sg_player, {sg_player, start_link, []},
+                    temporary, brutal_kill, worker, [sg_player]},
+
+    % simple_one_for_one: All child processes are dynamically added instances of the same process.
+    RestartStrategy = {simple_one_for_one, 0, 1},
+    {ok, {RestartStrategy, [PlayerProces]}}.
 

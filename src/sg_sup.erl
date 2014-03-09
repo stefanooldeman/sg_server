@@ -28,7 +28,7 @@ init([]) ->
               permanent, 5000, worker, [sg_world]},
 
     PlayerSup = {sg_player_sup, {sg_player_sup, start_link, []},
-                 permanent, 5000, supervisor, [sg_player]},
+                 permanent, 2000, supervisor, [sg_player]},
 
     Children = [Server, PlayerSup],
     RestartStrategy = {one_for_one, 0, 1},
